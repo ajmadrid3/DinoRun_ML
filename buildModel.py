@@ -7,10 +7,10 @@ from keras.optimizers import SGD , Adam
 from keras.callbacks import TensorBoard
 
 #model hyper parameters 
-learning_rate = 1e-4
+LEARNING_RATE = 1e-4
 img_rows, img_cols = 40,20
 img_channels = 4
-actions = 2
+ACTIONS = 2
 
 def buildmodel():
     #Building keras model 
@@ -24,8 +24,8 @@ def buildmodel():
     model.add(Flatten())
     model.add(Dense(512))
     model.add(Activation('relu'))
-    model.add(Dense(actions))
-    adam = Adam(lr = learning_rate)
+    model.add(Dense(ACTIONS))
+    adam = Adam(lr = LEARNING_RATE)
     model.compile(loss = 'mse', optimizers = adam)
     return model
 
