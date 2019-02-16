@@ -1,5 +1,6 @@
 import numpy as np
 from GameParameters import BATCH, GAMMA
+from DinoRun import model
 from trainNetwork import s_t
 from keras.models import model_from_json
 from keras.models import Sequential
