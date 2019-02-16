@@ -1,4 +1,6 @@
 # Controls Dino
+import time
+
 class DinoAgent:
     # __init__(): starts the game by performing one jump
     def __init__(self, game):

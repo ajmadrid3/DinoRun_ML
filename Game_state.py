@@ -1,4 +1,6 @@
 # Used by the network to perform actions and getting new states
+from Game_state import grab_screen
+
 class Game_state:
     def __init__(self, agent, game):
         self._agent = agent

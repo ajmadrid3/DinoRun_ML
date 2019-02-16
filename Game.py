@@ -1,4 +1,11 @@
 # Selenium interfacing between Python and Chrome
+import os
+import time
+from Path import game_url, chrome_driver_path
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+
 class Game:
     # __init__(): Launch Chrome using attributes in chrome_options
     def __init__(self, custom_config = True):
