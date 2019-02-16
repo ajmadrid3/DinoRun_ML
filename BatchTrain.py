@@ -1,7 +1,6 @@
 import numpy as np
 from GameParameters import BATCH, GAMMA
-from DinoRun import model
-from trainNetwork import s_t
+from buildModel import ACTIONS
 from keras.models import model_from_json
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
@@ -11,7 +10,7 @@ from keras.callbacks import TensorBoard
 
 def trainBatch(minibatch):
     inputs = np.zeros((BATCH, s_t.shape[1], s_t.shape[2], s_t.shape[3]))
-    targets = np.zeros
+    targets = np.zeros((inputs.shape[0], ACTIONS))
     loss = 0
 
     for i in range(0, len(minibatch)):

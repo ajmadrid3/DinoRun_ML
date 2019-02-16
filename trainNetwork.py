@@ -2,9 +2,8 @@ import numpy as np
 import random 
 import time
 from collections import deque
-
 from buildModel import ACTIONS
-from GameParameters import OBSERVATION, INITIAL_EPSILON, FINAL_EPSILON, EXPLORE, REPLAY_MEMORY, BATCH
+from GameParameters import OBSERVATION, INITIAL_EPSILON, FINAL_EPSILON, EXPLORE, REPLAY_MEMORY, BATCH, GAMMA
 from BatchTrain import trainBatch
 
 
@@ -53,7 +52,27 @@ def trainNetwork(model, game_state):
             D.popleft()
 
         if t > OBSERVE:
-            trainBatch(random.sample(D, BATCH)) 
+            minibatch = random.sample(D, BATCH)
+            inputs = np.zeros((BATCH, s_t.shape[1], s_t.shape[2], s_t.shape[3]))
+            targets = np.zeros((inputs.shape[0], ACTIONS))
+            loss = 0
+
+            for i in range(0, len(minibatch)):
+                state_t = minibatch[i][0]   # 4D stack of images
+                action_t = minibatch[i][1]  # Action index
+                reward_t = minibatch[i][2]  # Reward at state_t due to action_t
+                state_t1 = minibatch[i][3]  # Next state
+                terminal = minibatch[i][4]  # Whether the agent died or survied from the action
+                inputs[i:i + 1] = state_t
+                targets[i] = model.predict(state_t)
+                Q_sa = model.predict(state_t1)
+                if terminal:
+                    targets[i, action_t] = reward_t
+                else:
+                    targets[i, action_t] = reward_t + GAMMA * np.max(Q_sa)
+
+            loss += model.train_on_batch(inputs, targets)
+
 
         s_t = s_t1
         t = t + 1
