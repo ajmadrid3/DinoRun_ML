@@ -26,6 +26,6 @@ def buildmodel():
     model.add(Activation('relu'))
     model.add(Dense(ACTIONS))
     adam = Adam(lr = LEARNING_RATE)
-    model.compile(loss = 'mse', optimizers = adam)
+    model.compile(loss = 'mse', optimizer = adam)
     return model
 
