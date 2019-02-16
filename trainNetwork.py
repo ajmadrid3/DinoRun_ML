@@ -1,6 +1,12 @@
 import numpy as np
-import random as random
+import random 
+import time
 from collections import deque
+
+from buildModel import ACTIONS
+from GameParameters import OBSERVATION, INITIAL_EPSILON, FINAL_EPSILON, EXPLORE, REPLAY_MEMORY, BATCH
+from BatchTrain import trainBatch
+
 
 def trainNetwork(model, game_state):
     # Stores the previous observations in replay memory.
@@ -12,7 +18,7 @@ def trainNetwork(model, game_state):
     s_t = np.stack((x_t, x_t, x_t, x_t), axis = 2).reshape(1, 20, 40, 4) # Stack of four images as placeholder for input
 
     OBSERVE = OBSERVATION
-    epsilon = INITAL_EPSILION
+    epsilon = INITIAL_EPSILON
     t = 0
 
     while(True): 
@@ -34,7 +40,7 @@ def trainNetwork(model, game_state):
             a_t[action_index] = 1
 
         if epsilon > FINAL_EPSILON and t > OBSERVE:
-            epsilon -= (INITAL_EPSILION - FINAL_EPSILON) / EXPLORE
+            epsilon -= (INITIAL_EPSILON - FINAL_EPSILON) / EXPLORE
 
         x_t1, x_r, terminal = game_state.get_state(a_t)
         last_time = time.time()
@@ -43,10 +49,13 @@ def trainNetwork(model, game_state):
 
         #Stores the transition
         D.append((s_t, action_index, r_t, s_t1, terminal))
-        D.popleft() if len(D) > REPLAY_MEMORY
+        if len(D) > REPLAY_MEMORY:
+            D.popleft()
 
-        trainBatch(random.sample(D, Batch)) if t > OBSERVE
+        if t > OBSERVE:
+            trainBatch(random.sample(D, BATCH)) 
+
         s_t = s_t1
-        t = t++
+        t = t + 1
 
-        print("TimeStep ",t, "/ Epsilon ", epsilon, "/ Action ", action_index, "/ Reward ", r_t)
+        print("TimeStep ",t, "/ Epsilon ", epsilon, "/ Action ", action_index, "/ Reward ", r_t, "/ Max Q ", np.max(Q_sa), "/ Loss ", loss)
